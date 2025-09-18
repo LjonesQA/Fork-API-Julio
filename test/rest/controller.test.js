@@ -5,7 +5,6 @@ const app = require('../../rest/app');
 const userlogin = require('../../rest/controllers/userController');
 const modelsUser = require('../../src/models/user');
 
-
 describe('Teste de usuário', () => {
     describe('POST /api/users', () => {
        
@@ -26,7 +25,7 @@ describe('Teste de usuário', () => {
         });
      
         
-        it('logar um usuário', async () => {
+        it('logar com um usuário', async () => {
             const respostaLogin = await request(app)
                 .post('/api/users/login')
                 .send({ email:modelsUser[0].email, password: modelsUser[0].password });
@@ -35,8 +34,6 @@ describe('Teste de usuário', () => {
            expect(respostaLogin.status).to.equal(200);
            expect(respostaLogin.body).to.have.property('token');                
         })
-
-
 
     })
 })
