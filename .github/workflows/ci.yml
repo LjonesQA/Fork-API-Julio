@@ -44,20 +44,20 @@ jobs:
       run: npm run test-external
 
     
-    # - name: Start the application GraphQL
-    #   run: npm run start:graphql &
+    - name: Start the application GraphQL
+      run: npm run start:graphql &
 
-    # - name: Wait for the application graphql to be ready
-    #   run: |
-    #     for i in {1..15}; do
-    #       if curl -s http://localhost:4000; then
-    #         echo "GraphQL server is ready"
-    #         break
-    #       else
-    #         echo "Waiting for GraphQL server to be ready..."
-    #         sleep 5
-    #       fi
-    #     done
+    - name: Wait for the application graphql to be ready
+      run: |
+        for i in {1..15}; do
+          if curl -s http://localhost:4000; then
+            echo "GraphQL server is ready"
+            break
+          else
+            echo "Waiting for GraphQL server to be ready..."
+            sleep 5
+          fi
+        done
 
-    # - name: Run GraphQL tests
-    #   run: npm run test-graphql
+    - name: Run GraphQL tests
+      run: npm run test-graphql
