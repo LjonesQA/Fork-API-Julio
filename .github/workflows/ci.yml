@@ -45,7 +45,7 @@ jobs:
 
     
     - name: Start the application GraphQL
-      run: npm run start:graphql &
+      run: npm run start-graphql &
 
     - name: Wait for the application graphql to be ready
       run: |
