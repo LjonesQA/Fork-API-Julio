@@ -39,7 +39,7 @@ describe('Teste de usuário', () => {
     })    
 
     describe('POST /api/checkout', () => {
-        it('Deve fazer um checkout', async () => {
+        it('Deve finalizar um checkout', async () => {
             const token = await getAuthToken('localhost:3000', modelsUser[0].email, modelsUser[0].password);
             const respostaCheckout = await request('localhost:3000')
                 .post('/api/checkout')
