@@ -9,12 +9,12 @@ const senhatest = faker.internet.password();
 
 
 
-async function getAuthToken(username = modelsUser[0].name, password = modelsUser[0].password) {
+async function getAuthToken(email = modelsUser[0].email, password = modelsUser[0].password) {
   const query = {
-    query: `mutation Login($username: String!, $password: String!) {\n  login(username: $username, password: $password) {\n    token\n  }\n}`,
-    variables: { username, password }
+    query: `mutation Login($email: String!, $password: String!) {\n  login(email: $email, password: $password) {\n    token\n  }\n}`,
+    variables: { email, password }
   };
-  const res = await request(external) // Aqui colocamos a url da aplicação que está rodando externamente
+  const res = await request(external) 
     .post('/graphql')
     .send(query);
   return res.body.data.login.token;
@@ -33,7 +33,7 @@ describe('Teste de usuário', () => {
         }`
     };
 
-    const newUser = await request(external) // external = URL da sua API
+    const newUser = await request(external) 
       .post('/graphql')
       .send(mutation);
    
@@ -55,12 +55,39 @@ describe('Teste de usuário', () => {
       
       };
       
-      const failUser = await request(external) // external = URL da sua API
+      const failUser = await request(external) 
         .post('/graphql')
         .send(mutation);   
       expect(failUser.body).to.have.property('errors');
       expect(failUser.body.errors[0].message).to.equal('Email já cadastrado');
     })  
+    
+    it('finalizar um checkout-boleto ', async () => {
+      const token = await getAuthToken();
+      const mutation = {
+      query: `
+        mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!) {
+          checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod) {
+            paymentMethod
+          }
+        }
+      `,
+      variables: {
+        items: [{ productId: 2, quantity: 1 }],
+        freight: 15,
+        paymentMethod: "boleto"
+      }
+    };
+
+      const respostaCheckout = await request(external) 
+        .post('/graphql')
+        .set('Authorization', `Bearer ${token}`)
+        .send(mutation);
+
+      expect(respostaCheckout.body.data.checkout).to.include({ paymentMethod: 'boleto' });
+      
+    })
+
     
     
   })
