@@ -51,5 +51,23 @@ describe('Teste de usuário', () => {
             expect(respostaCheckout.status).to.equal(200);
             
         })
+
+        it('Deve falhar ao finalizar um checkout sem token', async () => {
+            const respostaCheckout = await request('localhost:3000')
+                .post('/api/checkout')
+                .send({ items: [{ productId: 1, quantity: 2 }]})
+            ;
+            expect(respostaCheckout.status).to.equal(401);
+        })
+        
+        it('Deve falhar ao tentar finalizar o checkout com produto inexistente', async () => { 
+            const token = await getAuthToken('localhost:3000', modelsUser[0].email, modelsUser[0].password);
+            const respostaCheckout = await request('localhost:3000')
+                .post('/api/checkout')
+                .set('Authorization', `Bearer ${token}`)
+                .send({ items: [{ productId: 9999, quantity: 2 }]})
+            ;
+            expect(respostaCheckout.status).to.equal(400);
+        })
     })
 })
